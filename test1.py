@@ -8,8 +8,6 @@ parent = os.path.dirname(current)
 sys.path.append(parent)
 from samplebase import SampleBase
 
-print("henlo")
-
 panel_width = 64
 panel_height = 32
 
