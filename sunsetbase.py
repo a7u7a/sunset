@@ -182,8 +182,8 @@ class Sunset(SampleBase):
         # normalize sun elevation to a 0-1 scale (0 at lowest, 1 at highest)
         normalized_elevation = (sun_elevation + 1) / 2
 
-        # convert to screen coordinates (0 at lowest, 64 at highest)
-        screen_position = int(normalized_elevation * (panel_height/2))
+        # convert to screen coordinates (0 at lowest, 32 at lowest to avoid having the sun completely dissapear from view) 
+        screen_position = int(normalized_elevation * -(panel_height/2))
 
         return screen_position
 
@@ -238,14 +238,6 @@ class Sunset(SampleBase):
     def run(self):
         self.offset_canvas = self.matrix.CreateFrameCanvas()
         self.tickers = TickerData().tickers
-        
-        # print("tickers",self.tickers["tickers"])
-        # while True: 
-        #     if self.stock_data is not None:
-        #         futures = list(self.stock_data.keys())
-        #         for future in futures:
-        #             print("testcolor",self.get_color_from_tickers(future))
-        #     sleep(1)
 
         # to test sun position
         # for t in range(24):
@@ -273,7 +265,9 @@ class Sunset(SampleBase):
                     upper += random.randint(h-4,h+4)
                     lower += random.randint(h-4,h+4)
                 self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-                sleep(5)
+                sleep(20)
+            else:
+                print("No stock_data.json yet, waiting for file..")
                 
 
 if __name__ == "__main__":
