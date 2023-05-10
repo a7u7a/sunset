@@ -100,7 +100,6 @@ class Sunset(SampleBase):
     def run(self):
         self.offset_canvas = self.matrix.CreateFrameCanvas()
         self.tickers = TickerData().tickers
-        print("self.tickers",self.tickers)
 
         while True:
             centerline = 14

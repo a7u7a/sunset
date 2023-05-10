@@ -1,5 +1,5 @@
 Run example with:
 
 ````
-sudo python test3.py --led-cols=128 --led-rows=32 --led-slowdown=2 --led-gpio-mapping=adafruit-hat
+sudo python app.py --led-cols=128 --led-rows=32 --led-slowdown=2 --led-gpio-mapping=adafruit-hat
 ````
