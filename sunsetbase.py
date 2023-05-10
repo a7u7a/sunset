@@ -202,7 +202,7 @@ class Sunset(SampleBase):
                 self.draw_sun(0)
                 for future in futures:
                     future_data = self.stock_data[future]
-                    print("future_data",future_data)
+                    print("future_data",future,future_data)
                     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
                     self.plot_data(future_data, c1, lower, upper)
                     # modify limits after plotting
