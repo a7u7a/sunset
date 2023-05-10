@@ -43,8 +43,8 @@ class Sunset(SampleBase):
         new_y = y % panel_height
 
         # Constrain x to the screen width
-        if new_x >= panel_width * 2:
-            new_x = panel_width * 2 - 1
+        if new_x >= panel_width:
+            new_x = panel_width - 1
 
         return new_x, new_y
     
@@ -186,7 +186,7 @@ class Sunset(SampleBase):
         current_time = datetime.now()
         future_time = current_time + timedelta(hours=offset)
         sun_y_pos = self.get_sun_position(future_time)
-        x,y = self.to_rectangular(int(panel_width/4), sun_y_pos)
+        x,y = self.to_rectangular(int(panel_width/2), sun_y_pos)
         self.draw_filled_circle(x,y,10,self.sun_color)
 
     def run(self):
