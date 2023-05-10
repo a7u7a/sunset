@@ -197,26 +197,19 @@ class Sunset(SampleBase):
         self.draw_filled_circle(x,y,sun_radius,self.sun_color)
 
 
-    def fill_gradient(self, color1, color2):
-        # color1 and color2 are tuples (r1, g1, b1) and (r2, g2, b2)
-        r1, g1, b1 = color1
-        r2, g2, b2 = color2
+    def get_color_from_tickers(self, name):
+        for ticker in self.tickers["tickers"]:
+            if name == ticker["symbol"]:
+                return tuple(ticker["color"])
 
+    def fill_color(self, color):
+        r, g, b = color
         for y in range(panel_height):
             for x in range(panel_width):
-                # Compute the interpolation factor
-                t = y / (panel_height - 1)
-
-                # Interpolate between the colors
-                r = r1 * (1 - t) + r2 * t
-                g = g1 * (1 - t) + g2 * t
-                b = b1 * (1 - t) + b2 * t
-
-                # Set the pixel color
                 x_,y_ = self.to_rectangular(x, y)
-                self.offset_canvas.SetPixel(x_, y_, int(r), int(g), int(b))
+                self.offset_canvas.SetPixel(x_, y_, r, g, b)
 
-    def update_sky_gradient(self):
+    def update_sky_color(self):
         # Get the current time
         now = datetime.now()
 
@@ -225,10 +218,10 @@ class Sunset(SampleBase):
 
         # Define sky colors for different times of day
         colors = [
-            ((135, 206, 235), (255, 223, 0)),  # morning
-            ((70, 130, 180), (135, 206, 235)),  # midday
-            ((255, 223, 0), (139, 0, 0)),  # evening
-            ((25, 25, 112), (0, 0, 0)),  # midnight
+            (200, 200, 0),  # morning
+            (0, 200, 200),  # midday
+            (200, 100, 0),  # evening
+            (0, 0, 100),  # midnight
         ]
 
         # Calculate the index and interpolation factor for the current time
@@ -237,16 +230,10 @@ class Sunset(SampleBase):
         t -= i
 
         # Interpolate between the current and next colors
-        color1 = [c1 * (1 - t) + c2 * t for c1, c2 in zip(colors[i % len(colors)][0], colors[(i + 1) % len(colors)][0])]
-        color2 = [c1 * (1 - t) + c2 * t for c1, c2 in zip(colors[i % len(colors)][1], colors[(i + 1) % len(colors)][1])]
+        color = [c1 * (1 - t) + c2 * t for c1, c2 in zip(colors[i % len(colors)], colors[(i + 1) % len(colors)])]
 
-        # Fill the gradient
-        self.fill_gradient(tuple(map(int, color1)), tuple(map(int, color2)))
-
-    def get_color_from_tickers(self, name):
-        for ticker in self.tickers["tickers"]:
-            if name == ticker["symbol"]:
-                return tuple(ticker["color"])
+        # Fill the screen with the color
+        self.fill_color(tuple(map(int, color)))
 
     def run(self):
         self.offset_canvas = self.matrix.CreateFrameCanvas()
@@ -274,6 +261,7 @@ class Sunset(SampleBase):
                 upper = 40
                 lower = 60
                 # self.update_sky_gradient()
+                self.update_sky_color()
                 self.draw_sun(0)
                 for future in futures:
                     future_data = self.stock_data[future]
