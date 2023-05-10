@@ -2,15 +2,18 @@
     "tickers": [
         {
             "symbol": "GC=F",
-            "name": "Gold"
+            "name": "Gold",
+            "color":[130,2,51]
         },
         {
             "symbol": "CL=F",
-            "name": "Crude Oil"
+            "name": "Crude Oil",
+            "color":[83,0,48]
         },
         {
             "symbol": "HG=F",
-            "name": "Copper"
+            "name": "Copper",
+            "color":[46,17,44]
         }
     ]
 }

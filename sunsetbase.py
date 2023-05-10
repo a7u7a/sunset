@@ -190,40 +190,102 @@ class Sunset(SampleBase):
     def draw_sun(self, offset):
         """Draw sun according to time"""
         current_time = datetime.now()
+        sun_radius = 30
         future_time = current_time + timedelta(hours=offset)
         sun_y_pos = self.get_sun_position(future_time)
         x,y = self.to_rectangular(int(panel_width/2), sun_y_pos)
-        self.draw_filled_circle(x,y,10,self.sun_color)
+        self.draw_filled_circle(x,y,sun_radius,self.sun_color)
+
+
+    def fill_gradient(self, color1, color2):
+        # color1 and color2 are tuples (r1, g1, b1) and (r2, g2, b2)
+        r1, g1, b1 = color1
+        r2, g2, b2 = color2
+
+        for y in range(panel_height):
+            for x in range(panel_width):
+                # Compute the interpolation factor
+                t = y / (panel_height - 1)
+
+                # Interpolate between the colors
+                r = r1 * (1 - t) + r2 * t
+                g = g1 * (1 - t) + g2 * t
+                b = b1 * (1 - t) + b2 * t
+
+                # Set the pixel color
+                x_,y_ = self.to_rectangular(x, y)
+                self.offset_canvas.SetPixel(x_, y_, int(r), int(g), int(b))
+
+    def update_sky_gradient(self):
+        # Get the current time
+        now = datetime.now()
+
+        # Normalize the time to a value between 0 (midnight) and 1 (next midnight)
+        t = ((now.hour * 60 + now.minute) * 60 + now.second) / 86400  # 86400 seconds in a day
+
+        # Define sky colors for different times of day
+        colors = [
+            ((135, 206, 235), (255, 223, 0)),  # morning
+            ((70, 130, 180), (135, 206, 235)),  # midday
+            ((255, 223, 0), (139, 0, 0)),  # evening
+            ((25, 25, 112), (0, 0, 0)),  # midnight
+        ]
+
+        # Calculate the index and interpolation factor for the current time
+        t *= len(colors)
+        i = int(t)
+        t -= i
+
+        # Interpolate between the current and next colors
+        color1 = [c1 * (1 - t) + c2 * t for c1, c2 in zip(colors[i % len(colors)][0], colors[(i + 1) % len(colors)][0])]
+        color2 = [c1 * (1 - t) + c2 * t for c1, c2 in zip(colors[i % len(colors)][1], colors[(i + 1) % len(colors)][1])]
+
+        # Fill the gradient
+        self.fill_gradient(tuple(map(int, color1)), tuple(map(int, color2)))
+
+    def get_color_from_tickers(self, name):
+        for ticker in self.tickers["tickers"]:
+            if name == ticker["symbol"]:
+                return tuple(ticker["color"])
 
     def run(self):
         self.offset_canvas = self.matrix.CreateFrameCanvas()
         self.tickers = TickerData().tickers
         
-
-        for t in range(24):
-            self.offset_canvas.Clear()
-            self.draw_sun(t)
-            self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-            sleep(1)
-
+        # print("tickers",self.tickers["tickers"])
         # while True: 
         #     if self.stock_data is not None:
         #         futures = list(self.stock_data.keys())
-        #         self.offset_canvas.Clear()
-        #         upper = 25
-        #         lower = 35
-        #         self.draw_sun(0)
         #         for future in futures:
-        #             future_data = self.stock_data[future]
-        #             print("future_data",future,future_data)
-        #             c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
-        #             self.plot_data(future_data, c1, lower, upper)
-        #             # modify limits after plotting
-        #             h = int(panel_height/4)
-        #             upper += random.randint(h-4,h+4)
-        #             lower += random.randint(h-4,h+4)
-        #         self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-        #         sleep(5)
+        #             print("testcolor",self.get_color_from_tickers(future))
+        #     sleep(1)
+
+        # to test sun position
+        # for t in range(24):
+        #     self.offset_canvas.Clear()
+        #     self.draw_sun(t)
+        #     self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+        #     sleep(1)
+
+        while True: 
+            if self.stock_data is not None:
+                futures = list(self.stock_data.keys())
+                self.offset_canvas.Clear()
+                upper = 25
+                lower = 35
+                self.update_sky_gradient()
+                self.draw_sun(0)
+                for future in futures:
+                    future_data = self.stock_data[future]
+                    # c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
+                    color = self.get_color_from_tickers(future)
+                    self.plot_data(future_data, color, lower, upper)
+                    # modify limits after plotting
+                    h = int(panel_height/4)
+                    upper += random.randint(h-4,h+4)
+                    lower += random.randint(h-4,h+4)
+                self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+                sleep(5)
                 
 
 if __name__ == "__main__":
