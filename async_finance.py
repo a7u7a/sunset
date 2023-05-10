@@ -85,13 +85,14 @@ class Finance(object):
             data = {}
             try:
                 for r in results:
-                    # print("r",r)
-                    data.update(r)
-                try:
-                    self.save_file(data)
-                    print("Updated stock_data.json at", datetime.now())
-                except Exception as e: 
-                    print("Error while saving stock data to file:", e)  
+                    if r is not None:  # only update data if response is not None
+                        data.update(r)
+                if len(data) == len(tickers):  # only save to file if data for all tickers is available
+                    try:
+                        self.save_file(data)
+                        print("Updated stock_data.json at", datetime.now())
+                    except Exception as e: 
+                        print("Error while saving stock data to file:", e)  
             except Exception as e: 
                 print("ERROR async_finance.py, problem getting data from Yahoo Finance:", e)
             time.sleep(3600) # check for new values every hour
