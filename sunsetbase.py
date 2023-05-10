@@ -183,7 +183,7 @@ class Sunset(SampleBase):
         normalized_elevation = (sun_elevation + 1) / 2
 
         # convert to screen coordinates (0 at lowest, 64 at highest)
-        screen_position = int(normalized_elevation * (panel_height))
+        screen_position = int(normalized_elevation * (panel_height/2))
 
         return screen_position
 
