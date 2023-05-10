@@ -273,7 +273,7 @@ class Sunset(SampleBase):
                 self.offset_canvas.Clear()
                 upper = 25
                 lower = 35
-                self.update_sky_gradient()
+                # self.update_sky_gradient()
                 self.draw_sun(0)
                 for future in futures:
                     future_data = self.stock_data[future]
