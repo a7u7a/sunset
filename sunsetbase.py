@@ -158,7 +158,12 @@ class Sunset(SampleBase):
                 last_valid_y = y2
             else:
                 y2 = last_valid_y
-                
+            
+            x11,y11 = self.to_rectangular(int(x1), int(y1))
+            x22,y22 = self.to_rectangular(int(x2), int(y2))
+            self.draw_filled_circle(x11,y11,4,self.sun_color)
+            self.draw_filled_circle(x22,y22,4,self.sun_color)
+            
             self.draw_line_and_fill((int(x1), int(y1)), (int(x2), int(y2)), color)
 
 
