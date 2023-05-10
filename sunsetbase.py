@@ -15,8 +15,8 @@ sys.path.append(parent)
 from samplebase import SampleBase
 
 
-panel_width = 64
-panel_height = 32
+panel_width = 128
+panel_height = 128
 
 class Sunset(SampleBase):
     def __init__(self, *args, **kwargs):
@@ -91,21 +91,6 @@ class Sunset(SampleBase):
             _x, _y = self.to_rectangular(x,y_fill)
             self.offset_canvas.SetPixel(_x, _y, r, g, b)
 
-    def draw_layer(self,centerline, color):
-        point1 = (0, centerline)
-        numPoints = 7
-        for i in range(numPoints):
-            if i == 5:
-                x = panel_width-1
-            else:
-                x = abs(int(((panel_width/numPoints)*i) + random.randint(-2,2)))
-                if x > panel_width:
-                    x -= 3
-            y = centerline + random.randint(-12,12)
-            point2 = (x, y)
-            self.draw_line_and_fill(point1, point2, color)
-            point1 = point2
-
     def draw_filled_circle(self, center_x, center_y, radius, color):
         """Draws a filled circle at a specified location with a specified radius and color."""
         r, g, b = color
@@ -156,8 +141,6 @@ class Sunset(SampleBase):
         # Normalize to panel height
         normalized_values = [lower_limit - (value - min_value) / (max_value - min_value) * (lower_limit - upper_limit) if value is not None else None for value in values]
     
-    
-        
         # Step 3: Iterate over data and plot
         last_valid_y = None
         for i in range(1, len(dates)):
@@ -176,7 +159,6 @@ class Sunset(SampleBase):
             else:
                 y2 = last_valid_y
                 
-            
             self.draw_line_and_fill((int(x1), int(y1)), (int(x2), int(y2)), color)
 
 
@@ -220,12 +202,12 @@ class Sunset(SampleBase):
                 self.draw_sun(0)
                 for future in futures:
                     future_data = self.stock_data[future]
-                    
                     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
                     self.plot_data(future_data, c1, lower, upper)
                     # modify limits after plotting
-                    upper += random.randint(16,18)
-                    lower += random.randint(16,18)
+                    h = panel_height/4
+                    upper += random.randint(h-4,h+4)
+                    lower += random.randint(h-4,h+4)
                     
                 self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
                 sleep(5)
