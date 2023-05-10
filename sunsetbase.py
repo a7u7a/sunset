@@ -144,8 +144,8 @@ class Sunset(SampleBase):
         # Step 3: Iterate over data and plot
         last_valid_y = None
         for i in range(1, len(dates)):
-            x1 = (dates[i - 1] - dates[0]).days / (dates[-1] - dates[0]).days * (panel_width - 1)
-            x2 = (dates[i] - dates[0]).days / (dates[-1] - dates[0]).days * (panel_width - 1)
+            x1 = (dates[i - 1] - dates[0]).days / (dates[-1] - dates[0]).days * (int(panel_width/2) - 1)
+            x2 = (dates[i] - dates[0]).days / (dates[-1] - dates[0]).days * (int(panel_width/2) - 1)
 
             if normalized_values[i - 1] is not None:
                 y1 = normalized_values[i - 1]
@@ -205,9 +205,9 @@ class Sunset(SampleBase):
                     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
                     self.plot_data(future_data, c1, lower, upper)
                     # modify limits after plotting
-                    h = int(panel_height/4)
-                    upper += random.randint(h-5,h+4)
-                    lower += random.randint(h-5,h+4)
+                    h = int(panel_height/5)
+                    upper += random.randint(h-4,h+4)
+                    lower += random.randint(h-4,h+4)
                 self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
                 sleep(5)
                 
