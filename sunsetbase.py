@@ -15,8 +15,8 @@ sys.path.append(parent)
 from samplebase import SampleBase
 
 
-panel_width = 128
-panel_height = 128
+panel_width = 64
+panel_height = 32
 
 class Sunset(SampleBase):
     def __init__(self, *args, **kwargs):
@@ -39,12 +39,12 @@ class Sunset(SampleBase):
         to rectangular (ie 32x128, side by side) and constrains them to the screen space."""
         
         panel_num = y // panel_height
-
         new_x = x + panel_num * panel_width
         new_y = y % panel_height
 
-        new_x %= panel_width * 2
-        return new_x, new_y
+        # Constrain x to the screen width
+        if new_x >= panel_width * 2:
+            new_x = panel_width * 2 - 1
 
         return new_x, new_y
     
@@ -157,7 +157,7 @@ class Sunset(SampleBase):
         normalized_values = [lower_limit - (value - min_value) / (max_value - min_value) * (lower_limit - upper_limit) if value is not None else None for value in values]
     
     
-        print("normalized_values",normalized_values)
+        
         # Step 3: Iterate over data and plot
         last_valid_y = None
         for i in range(1, len(dates)):
@@ -176,7 +176,7 @@ class Sunset(SampleBase):
             else:
                 y2 = last_valid_y
                 
-            print("test",(int(x1), int(y1)), (int(x2), int(y2)))
+            
             self.draw_line_and_fill((int(x1), int(y1)), (int(x2), int(y2)), color)
 
 
@@ -220,17 +220,16 @@ class Sunset(SampleBase):
                 self.draw_sun(0)
                 for future in futures:
                     future_data = self.stock_data[future]
-                    print("future_data",future,future_data)
-                    print("")
+                    
                     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
                     self.plot_data(future_data, c1, lower, upper)
                     # modify limits after plotting
                     upper += random.randint(16,18)
                     lower += random.randint(16,18)
-                    print("upper",upper,"lower",lower)
+                    
                 self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
                 sleep(5)
-
+                
 
 if __name__ == "__main__":
     sunset = Sunset()
