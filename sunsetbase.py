@@ -159,10 +159,11 @@ class Sunset(SampleBase):
             else:
                 y2 = last_valid_y
             
-            x11,y11 = self.to_rectangular(int(x1), int(y1))
-            x22,y22 = self.to_rectangular(int(x2), int(y2))
-            self.draw_filled_circle(x11,y11,4,self.sun_color)
-            self.draw_filled_circle(x22,y22,4,self.sun_color)
+            # debug points
+            # x11,y11 = self.to_rectangular(int(x1), int(y1))
+            # x22,y22 = self.to_rectangular(int(x2), int(y2))
+            # self.draw_filled_circle(x11,y11,4,self.sun_color)
+            # self.draw_filled_circle(x22,y22,4,self.sun_color)
             
             self.draw_line_and_fill((int(x1), int(y1)), (int(x2), int(y2)), color)
 
@@ -198,24 +199,31 @@ class Sunset(SampleBase):
         self.offset_canvas = self.matrix.CreateFrameCanvas()
         self.tickers = TickerData().tickers
         
-        while True: 
-            if self.stock_data is not None:
-                futures = list(self.stock_data.keys())
-                self.offset_canvas.Clear()
-                upper = 25
-                lower = 35
-                self.draw_sun(0)
-                for future in futures:
-                    future_data = self.stock_data[future]
-                    print("future_data",future,future_data)
-                    c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
-                    self.plot_data(future_data, c1, lower, upper)
-                    # modify limits after plotting
-                    h = int(panel_height/4)
-                    upper += random.randint(h-4,h+4)
-                    lower += random.randint(h-4,h+4)
-                self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-                sleep(5)
+
+        for t in range(24):
+            self.offset_canvas.Clear()
+            self.draw_sun(t)
+            self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+            sleep(1)
+
+        # while True: 
+        #     if self.stock_data is not None:
+        #         futures = list(self.stock_data.keys())
+        #         self.offset_canvas.Clear()
+        #         upper = 25
+        #         lower = 35
+        #         self.draw_sun(0)
+        #         for future in futures:
+        #             future_data = self.stock_data[future]
+        #             print("future_data",future,future_data)
+        #             c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
+        #             self.plot_data(future_data, c1, lower, upper)
+        #             # modify limits after plotting
+        #             h = int(panel_height/4)
+        #             upper += random.randint(h-4,h+4)
+        #             lower += random.randint(h-4,h+4)
+        #         self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+        #         sleep(5)
                 
 
 if __name__ == "__main__":
