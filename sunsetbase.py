@@ -22,6 +22,7 @@ class Sunset(SampleBase):
     def __init__(self, *args, **kwargs):
         super(Sunset, self).__init__(*args, **kwargs)
         self.sun_color = (177, 136, 58)
+        self.stock_data = None
 
     def load_stocks(self):
         try:
@@ -135,6 +136,51 @@ class Sunset(SampleBase):
                 x -= 1
                 err -= 2*x + 1
 
+    
+
+    def plot_data(self, data, color=(255, 255, 255),lower_limit=10, upper_limit=0):
+        # Step 1: Preprocess data
+        dates = list(data.keys())
+        values = list(data.values())
+        
+        # Convert date strings to datetime objects
+        dates = [datetime.strptime(date, "%Y-%m-%d") for date in dates]
+
+        # Replace "nodata" with None and convert others to float
+        values = [None if value == "nodata" else float(value) for value in values]
+        
+        # Step 2: Normalize data to fit LED panel
+        max_value = max(v for v in values if v is not None)
+        min_value = min(v for v in values if v is not None)
+        
+        # Normalize to panel height
+        normalized_values = [lower_limit - (value - min_value) / (max_value - min_value) * (lower_limit - upper_limit) if value is not None else None for value in values]
+    
+    
+        print("normalized_values",normalized_values)
+        # Step 3: Iterate over data and plot
+        last_valid_y = None
+        for i in range(1, len(dates)):
+            x1 = (dates[i - 1] - dates[0]).days / (dates[-1] - dates[0]).days * (panel_width - 1)
+            x2 = (dates[i] - dates[0]).days / (dates[-1] - dates[0]).days * (panel_width - 1)
+
+            if normalized_values[i - 1] is not None:
+                y1 = normalized_values[i - 1]
+                last_valid_y = y1
+            else:
+                y1 = last_valid_y
+            
+            if normalized_values[i] is not None:
+                y2 = normalized_values[i]
+                last_valid_y = y2
+            else:
+                y2 = last_valid_y
+                
+            print("test",(int(x1), int(y1)), (int(x2), int(y2)))
+            self.draw_line_and_fill((int(x1), int(y1)), (int(x2), int(y2)), color)
+
+
+
     def get_sun_position(self,current_time):
         # calculate minutes from midnight
         minutes_from_midnight = current_time.hour * 60 + current_time.minute
@@ -164,13 +210,42 @@ class Sunset(SampleBase):
     def run(self):
         self.offset_canvas = self.matrix.CreateFrameCanvas()
         self.tickers = TickerData().tickers
-
-        for t in range(24):
-            self.offset_canvas.Clear()
-            self.draw_sun(t)
-            self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-            sleep(.5)
         
+        while True: 
+            if self.stock_data is not None:
+                futures = list(self.stock_data.keys())
+                self.offset_canvas.Clear()
+                upper = 10
+                lower = 20
+                self.draw_sun(0)
+                for future in futures:
+                    future_data = self.stock_data[future]
+                    print("future_data",future,future_data)
+                    print("")
+                    c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
+                    self.plot_data(future_data, c1, lower, upper)
+                    # modify limits after plotting
+                    upper += random.randint(16,18)
+                    lower += random.randint(16,18)
+                    print("upper",upper,"lower",lower)
+                self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+                sleep(5)
+
+        # while True: 
+        #     if self.stock_data is not None:
+        #         print("self.stock_data",self.stock_data)
+        #     sleep(3)
+        
+        # for t in range(24):
+        #     self.offset_canvas.Clear()
+        #     self.draw_sun(t)
+        #     self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+        #     sleep(.5)
+        
+# to plot the data
+# find the min an max values in each ticker
+# make the plot 
+
         # while True: 
         #     self.offset_canvas.Clear()
         #     centerline = 14
