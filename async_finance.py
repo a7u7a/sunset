@@ -57,7 +57,6 @@ class Finance(object):
         end_time = int(time.time())
         start_time = end_time - 60*60*24*days
         symbol = ticker["symbol"]
-        name = ticker["name"]
         try:
             url = f"https://query1.finance.yahoo.com/v7/finance/download/{symbol}?period1={start_time}&period2={end_time}&interval=1d&events=history&includeAdjustedClose=true".format(symbol=symbol)
             data = {}
@@ -94,4 +93,4 @@ class Finance(object):
                     print("Error while saving stock data to file:", e)  
             except Exception as e: 
                 print("ERROR async_finance.py, problem getting data from Yahoo Finance:", e)
-            time.sleep(30) # sleep for 1 minutes 
+            time.sleep(3600) # check for new values every hour

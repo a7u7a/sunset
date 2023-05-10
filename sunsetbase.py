@@ -19,6 +19,7 @@ panel_height = 32
 class Sunset(SampleBase):
     def __init__(self, *args, **kwargs):
         super(Sunset, self).__init__(*args, **kwargs)
+        self.sun_color = (177, 136, 58)
 
     def load_stocks(self):
         try:
@@ -30,12 +31,18 @@ class Sunset(SampleBase):
             print("Error updating stock data")
             self.stock_data = None
 
-    def to_rectangular(self,x,y):
-        """ Maps pixel position from square panel arrangment (ie 64x64, one on top of the other) to rectangular (ie 32x128, side by side)"""
+    def to_rectangular(self, x, y):
+        """ Maps pixel position from square panel arrangement (ie 64x64, one on top of the other) 
+        to rectangular (ie 32x128, side by side) and constrains them to the screen space."""
+        
         panel_num = y // panel_height
         new_x = x + panel_num * panel_width
         new_y = y % panel_height
-        new_x %= panel_width * 2
+
+        # Constrain x to the screen width
+        if new_x >= panel_width * 2:
+            new_x = panel_width * 2 - 1
+
         return new_x, new_y
     
     def draw_line_and_fill(self, point1: Tuple[int, int], point2: Tuple[int, int], color: Tuple[int, int, int]):
@@ -96,26 +103,57 @@ class Sunset(SampleBase):
             self.draw_line_and_fill(point1, point2, color)
             point1 = point2
 
+    def draw_filled_circle(self, center_x, center_y, radius, color):
+        """Draws a filled circle at a specified location with a specified radius and color."""
+        r, g, b = color
+        def set_circle_points(x, y):
+            """Sets pixels to create a filled circle."""
+            for i in range(center_x - x, center_x + x + 1):
+                self.offset_canvas.SetPixel(i, center_y + y, r, g, b)
+                self.offset_canvas.SetPixel(i, center_y - y, r, g, b)
+            for i in range(center_x - y, center_x + y + 1):
+                self.offset_canvas.SetPixel(i, center_y + x, r, g, b)
+                self.offset_canvas.SetPixel(i, center_y - x, r, g, b)
+
+        x = radius
+        y = 0
+        err = 0
+
+        while x >= y:
+            set_circle_points(x, y)
+            y += 1
+            if err <= 0:
+                err += 2*y + 1
+            if err > 0:
+                x -= 1
+                err -= 2*x + 1
+
+    def draw_sun(self):
+        """Draw sun according to time"""
+        x,y = self.to_rectangular(int(panel_width/2), 10)
+        self.draw_filled_circle(x,y,10,self.sun_color)
+
+
 
     def run(self):
         self.offset_canvas = self.matrix.CreateFrameCanvas()
         self.tickers = TickerData().tickers
+        # self.draw_sun()
 
-        while True:
+        
+        while True: 
+            self.offset_canvas.Clear()
             centerline = 14
-        # while True: 
-        #     self.offset_canvas.Clear()
-        #     centerline = 14
-        #     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
-        #     c2 = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
-        #     c3 = (random.randint(0,255),random.randint(0,255) ,random.randint(0,255) )
-        #     colors = [c1, c2, c3]
-        #     for i in range(3):
-        #         self.draw_layer(centerline, colors[i])
-        #         centerline += 12
+            c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
+            c2 = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+            c3 = (random.randint(0,255),random.randint(0,255) ,random.randint(0,255) )
+            colors = [c1, c2, c3]
+            for i in range(3):
+                self.draw_layer(centerline, colors[i])
+                centerline += 12
 
-        #     self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-            # sleep(.1)
+            self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+            sleep(.1)
 
 if __name__ == "__main__":
     sunset = Sunset()
