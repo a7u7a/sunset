@@ -1,0 +1,16 @@
+{
+    "tickers": [
+        {
+            "symbol": "GC=F",
+            "name": "Gold"
+        },
+        {
+            "symbol": "CL=F",
+            "name": "Crude Oil"
+        },
+        {
+            "symbol": "HG=F",
+            "name": "Copper"
+        }
+    ]
+}

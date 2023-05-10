@@ -3,13 +3,15 @@ import random
 import os
 from time import sleep
 from rgbmatrix import graphics
+import json
 from typing import Tuple
+from ticker_data import TickerData
 # Import samplebase from parent directory 'samples'
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
 from samplebase import SampleBase
-from ticker_data import TickerData
+
 
 panel_width = 64
 panel_height = 32
@@ -17,6 +19,16 @@ panel_height = 32
 class Sunset(SampleBase):
     def __init__(self, *args, **kwargs):
         super(Sunset, self).__init__(*args, **kwargs)
+
+    def load_stocks(self):
+        try:
+            with open('stock_data.json') as json_file:
+                self.stock_data = json.load(json_file)
+                print("Updated stock data OK")
+        except Exception as e: 
+            print("ERROR load_stocks:",e)
+            print("Error updating stock data")
+            self.stock_data = None
 
     def to_rectangular(self,x,y):
         """ Maps pixel position from square panel arrangment (ie 64x64, one on top of the other) to rectangular (ie 32x128, side by side)"""
@@ -90,18 +102,20 @@ class Sunset(SampleBase):
         self.tickers = TickerData().tickers
         print("self.tickers",self.tickers)
 
-        while True: 
-            self.offset_canvas.Clear()
+        while True:
             centerline = 14
-            c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
-            c2 = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
-            c3 = (random.randint(0,255),random.randint(0,255) ,random.randint(0,255) )
-            colors = [c1, c2, c3]
-            for i in range(3):
-                self.draw_layer(centerline, colors[i])
-                centerline += 12
+        # while True: 
+        #     self.offset_canvas.Clear()
+        #     centerline = 14
+        #     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
+        #     c2 = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+        #     c3 = (random.randint(0,255),random.randint(0,255) ,random.randint(0,255) )
+        #     colors = [c1, c2, c3]
+        #     for i in range(3):
+        #         self.draw_layer(centerline, colors[i])
+        #         centerline += 12
 
-            self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+        #     self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
             # sleep(.1)
 
 if __name__ == "__main__":
