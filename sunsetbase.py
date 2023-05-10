@@ -15,8 +15,8 @@ sys.path.append(parent)
 from samplebase import SampleBase
 
 
-panel_width = 64
-panel_height = 32
+panel_width = 128
+panel_height = 128
 
 class Sunset(SampleBase):
     def __init__(self, *args, **kwargs):
@@ -39,12 +39,12 @@ class Sunset(SampleBase):
         to rectangular (ie 32x128, side by side) and constrains them to the screen space."""
         
         panel_num = y // panel_height
+
         new_x = x + panel_num * panel_width
         new_y = y % panel_height
 
-        # Constrain x to the screen width
-        if new_x >= panel_width * 2:
-            new_x = panel_width * 2 - 1
+        new_x %= panel_width * 2
+        return new_x, new_y
 
         return new_x, new_y
     
@@ -231,34 +231,6 @@ class Sunset(SampleBase):
                 self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
                 sleep(5)
 
-        # while True: 
-        #     if self.stock_data is not None:
-        #         print("self.stock_data",self.stock_data)
-        #     sleep(3)
-        
-        # for t in range(24):
-        #     self.offset_canvas.Clear()
-        #     self.draw_sun(t)
-        #     self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-        #     sleep(.5)
-        
-# to plot the data
-# find the min an max values in each ticker
-# make the plot 
-
-        # while True: 
-        #     self.offset_canvas.Clear()
-        #     centerline = 14
-        #     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
-        #     c2 = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
-        #     c3 = (random.randint(0,255),random.randint(0,255) ,random.randint(0,255) )
-        #     colors = [c1, c2, c3]
-        #     for i in range(3):
-        #         self.draw_layer(centerline, colors[i])
-        #         centerline += 12
-
-        #     self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-        #     sleep(.1)
 
 if __name__ == "__main__":
     sunset = Sunset()
