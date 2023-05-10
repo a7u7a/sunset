@@ -266,8 +266,6 @@ class Sunset(SampleBase):
                     lower += random.randint(h-4,h+4)
                 self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
                 sleep(20)
-            else:
-                print("No stock_data.json yet, waiting for file..")
                 
 
 if __name__ == "__main__":
