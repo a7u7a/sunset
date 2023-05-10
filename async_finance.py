@@ -63,7 +63,6 @@ class Finance(object):
             ssl._create_default_https_context = ssl._create_unverified_context
             with urlopen(url, timeout=10) as connection:
                 res = connection.read().decode()
-                print("res", res)
                 _ = csv.reader(StringIO(res))
                 cleaned = process_data(list(_))
                 data[symbol] = cleaned
