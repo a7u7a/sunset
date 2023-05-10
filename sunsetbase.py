@@ -197,8 +197,8 @@ class Sunset(SampleBase):
             if self.stock_data is not None:
                 futures = list(self.stock_data.keys())
                 self.offset_canvas.Clear()
-                upper = 10
-                lower = 20
+                upper = 25
+                lower = 35
                 self.draw_sun(0)
                 for future in futures:
                     future_data = self.stock_data[future]
@@ -206,9 +206,8 @@ class Sunset(SampleBase):
                     self.plot_data(future_data, c1, lower, upper)
                     # modify limits after plotting
                     h = int(panel_height/4)
-                    upper += random.randint(h-4,h+4)
-                    lower += random.randint(h-4,h+4)
-                    
+                    upper += random.randint(h-5,h+4)
+                    lower += random.randint(h-5,h+4)
                 self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
                 sleep(5)
                 
