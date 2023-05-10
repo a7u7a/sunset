@@ -144,8 +144,8 @@ class Sunset(SampleBase):
         # Step 3: Iterate over data and plot
         last_valid_y = None
         for i in range(1, len(dates)):
-            x1 = (dates[i - 1] - dates[0]).days / (dates[-1] - dates[0]).days * (int(panel_width/3) - 1)
-            x2 = (dates[i] - dates[0]).days / (dates[-1] - dates[0]).days * (int(panel_width/3) - 1)
+            x1 = (dates[i - 1] - dates[0]).days / (dates[-1] - dates[0]).days * (int(panel_width) - 1)
+            x2 = (dates[i] - dates[0]).days / (dates[-1] - dates[0]).days * (int(panel_width) - 1)
 
             if normalized_values[i - 1] is not None:
                 y1 = normalized_values[i - 1]
