@@ -23,6 +23,7 @@ class Sunset(SampleBase):
         super(Sunset, self).__init__(*args, **kwargs)
         self.sun_color = (255, 246, 00)
         self.stock_data = None
+        self.load_stocks()
 
     def load_stocks(self):
         try:
