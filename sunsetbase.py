@@ -6,6 +6,8 @@ from rgbmatrix import graphics
 import json
 from typing import Tuple
 from ticker_data import TickerData
+from datetime import datetime, timedelta
+import math
 # Import samplebase from parent directory 'samples'
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -109,11 +111,16 @@ class Sunset(SampleBase):
         def set_circle_points(x, y):
             """Sets pixels to create a filled circle."""
             for i in range(center_x - x, center_x + x + 1):
-                self.offset_canvas.SetPixel(i, center_y + y, r, g, b)
-                self.offset_canvas.SetPixel(i, center_y - y, r, g, b)
+                new_x, new_y = self.to_rectangular(i, center_y + y)
+                self.offset_canvas.SetPixel(new_x, new_y, r, g, b)
+                new_x, new_y = self.to_rectangular(i, center_y - y)
+                self.offset_canvas.SetPixel(new_x, new_y, r, g, b)
+
             for i in range(center_x - y, center_x + y + 1):
-                self.offset_canvas.SetPixel(i, center_y + x, r, g, b)
-                self.offset_canvas.SetPixel(i, center_y - x, r, g, b)
+                new_x, new_y = self.to_rectangular(i, center_y + x)
+                self.offset_canvas.SetPixel(new_x, new_y, r, g, b)
+                new_x, new_y = self.to_rectangular(i, center_y - x)
+                self.offset_canvas.SetPixel(new_x, new_y, r, g, b)
 
         x = radius
         y = 0
@@ -128,32 +135,55 @@ class Sunset(SampleBase):
                 x -= 1
                 err -= 2*x + 1
 
-    def draw_sun(self):
+    def get_sun_position(self,current_time):
+        # calculate minutes from midnight
+        minutes_from_midnight = current_time.hour * 60 + current_time.minute
+
+        # normalize it to a 0-1 scale (0 at midnight, 1 at next midnight)
+        normalized_time = minutes_from_midnight / (24*60)
+
+        # we use sin function to emulate the sun's movement, it returns -1 at midnight, 0 at 6AM, 1 at noon, 0 at 6PM and -1 at midnight again
+        sun_elevation = math.sin(2*math.pi * normalized_time)
+
+        # normalize sun elevation to a 0-1 scale (0 at lowest, 1 at highest)
+        normalized_elevation = (sun_elevation + 1) / 2
+
+        # convert to screen coordinates (0 at lowest, 64 at highest)
+        screen_position = int(normalized_elevation * 64)
+
+        return screen_position
+
+    def draw_sun(self, offset):
         """Draw sun according to time"""
-        x,y = self.to_rectangular(int(panel_width/2), 10)
+        current_time = datetime.now()
+        future_time = current_time + timedelta(hours=offset)
+        sun_y_pos = self.get_sun_position(future_time)
+        x,y = self.to_rectangular(int(panel_width/2), sun_y_pos)
         self.draw_filled_circle(x,y,10,self.sun_color)
-
-
 
     def run(self):
         self.offset_canvas = self.matrix.CreateFrameCanvas()
         self.tickers = TickerData().tickers
-        # self.draw_sun()
 
-        
-        while True: 
+        for t in range(24):
             self.offset_canvas.Clear()
-            centerline = 14
-            c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
-            c2 = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
-            c3 = (random.randint(0,255),random.randint(0,255) ,random.randint(0,255) )
-            colors = [c1, c2, c3]
-            for i in range(3):
-                self.draw_layer(centerline, colors[i])
-                centerline += 12
-
+            self.draw_sun(t)
             self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-            sleep(.1)
+            sleep(.5)
+        
+        # while True: 
+        #     self.offset_canvas.Clear()
+        #     centerline = 14
+        #     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
+        #     c2 = (random.randint(0,255), random.randint(0,255), random.randint(0,255))
+        #     c3 = (random.randint(0,255),random.randint(0,255) ,random.randint(0,255) )
+        #     colors = [c1, c2, c3]
+        #     for i in range(3):
+        #         self.draw_layer(centerline, colors[i])
+        #         centerline += 12
+
+        #     self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+        #     sleep(.1)
 
 if __name__ == "__main__":
     sunset = Sunset()
