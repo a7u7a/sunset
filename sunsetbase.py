@@ -144,8 +144,8 @@ class Sunset(SampleBase):
         # Step 3: Iterate over data and plot
         last_valid_y = None
         for i in range(1, len(dates)):
-            x1 = (dates[i - 1] - dates[0]).days / (dates[-1] - dates[0]).days * (panel_width - 1)
-            x2 = (dates[i] - dates[0]).days / (dates[-1] - dates[0]).days * (panel_width - 1)
+            x1 = (dates[i - 1] - dates[0]).days / (dates[-1] - dates[0]).days * ((int(panel_width/2)) - 1)
+            x2 = (dates[i] - dates[0]).days / (dates[-1] - dates[0]).days * ((int(panel_width/2)) - 1)
 
             if normalized_values[i - 1] is not None:
                 y1 = normalized_values[i - 1]
@@ -186,7 +186,7 @@ class Sunset(SampleBase):
         current_time = datetime.now()
         future_time = current_time + timedelta(hours=offset)
         sun_y_pos = self.get_sun_position(future_time)
-        x,y = self.to_rectangular(int(panel_width/2), sun_y_pos)
+        x,y = self.to_rectangular(int(panel_width/4), sun_y_pos)
         self.draw_filled_circle(x,y,10,self.sun_color)
 
     def run(self):
@@ -205,7 +205,7 @@ class Sunset(SampleBase):
                     c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
                     self.plot_data(future_data, c1, lower, upper)
                     # modify limits after plotting
-                    h = panel_height/4
+                    h = int(panel_height/4)
                     upper += random.randint(h-4,h+4)
                     lower += random.randint(h-4,h+4)
                     
