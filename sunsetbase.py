@@ -43,8 +43,8 @@ class Sunset(SampleBase):
         new_y = y % panel_height
 
         # Constrain x to the screen width
-        if new_x >= panel_width:
-            new_x = panel_width - 1
+        if new_x >= panel_width*2:
+            new_x = panel_width*2 - 1
 
         return new_x, new_y
     
