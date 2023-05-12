@@ -246,8 +246,8 @@ class Sunset(SampleBase):
         # to test sun position
         for t in range(24):
             self.offset_canvas.Clear()
-            self.draw_sun(t)
             self.update_sky_color(t)
+            self.draw_sun(t)
             self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
             sleep(1)
 
