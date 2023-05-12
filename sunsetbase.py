@@ -177,14 +177,14 @@ class Sunset(SampleBase):
         # normalize it to a 0-1 scale (0 at midnight, 1 at next midnight)
         normalized_time = minutes_from_midnight / (24*60)
 
-        # we use sin function to emulate the sun's movement, it returns -1 at midnight, 0 at 6AM, 1 at noon, 0 at 6PM and -1 at midnight again
-        sun_elevation = math.sin(2*math.pi * normalized_time)
+        # we use cos function to emulate the sun's movement, it returns 1 at midnight, 0 at 6AM, -1 at noon, 0 at 6PM and 1 at midnight again
+        sun_elevation = math.cos(2*math.pi * normalized_time)
 
         # normalize sun elevation to a 0-1 scale (0 at lowest, 1 at highest)
         normalized_elevation = (sun_elevation + 1) / 2
 
-        # convert to screen coordinates (0 at lowest, 32 at lowest to avoid having the sun completely dissapear from view) 
-        screen_position = int(normalized_elevation * -(panel_height/2))
+        # normalize sun elevation to a panel_height/2-panel_height scale (panel_height/2 at lowest, 0 at highest)
+        screen_position = int((panel_height / 2) * (1 - sun_elevation))
 
         return screen_position
 
