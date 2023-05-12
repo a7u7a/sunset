@@ -184,7 +184,7 @@ class Sunset(SampleBase):
         normalized_elevation = (sun_elevation + 1) / 2
 
         # normalize sun elevation to a panel_height/2-panel_height scale (panel_height/2 at lowest, 0 at highest)
-        screen_position = int((panel_height / 2) * (1 - sun_elevation))
+        screen_position = int((panel_height / 2) * (sun_elevation))
 
         return screen_position
 
