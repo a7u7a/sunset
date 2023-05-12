@@ -173,17 +173,12 @@ class Sunset(SampleBase):
     def get_sun_position(self,current_time):
         # calculate minutes from midnight
         minutes_from_midnight = current_time.hour * 60 + current_time.minute
-
         # normalize it to a 0-1 scale (0 at midnight, 1 at next midnight)
         normalized_time = minutes_from_midnight / (24*60)
-        
-
         # we use cos function to emulate the sun's movement, it returns 1 at midnight, 0 at 6AM, -1 at noon, 0 at 6PM and 1 at midnight again
         sun_elevation = math.cos(2*math.pi * normalized_time)
-        print("norm", normalized_time, "1-elev", 1-sun_elevation)
         # normalize sun elevation to a panel_height/2-panel_height scale (panel_height/2 at lowest, 0 at highest)
-        screen_position = abs(panel_height-int((panel_height / 2) * (1-sun_elevation)))
-
+        screen_position = abs(panel_height-int((panel_height / 2) * (1-sun_elevation))) # abs to invert
         return screen_position
 
     def draw_sun(self, offset):
@@ -191,14 +186,9 @@ class Sunset(SampleBase):
         current_time = datetime.now()
         sun_radius = 30
         future_time = current_time + timedelta(hours=offset)
-        print("time", future_time)
         sun_y_pos = self.get_sun_position(future_time)
-        print("sun pos", sun_y_pos)
-        print("")
         x,y = self.to_rectangular(int(panel_width/2), sun_y_pos)
-        print("transformed", x,y)
         self.draw_filled_circle(x,y,sun_radius,self.sun_color)
-
 
     def get_color_from_tickers(self, name):
         for ticker in self.tickers["tickers"]:
@@ -219,13 +209,14 @@ class Sunset(SampleBase):
 
         # Normalize the time to a value between 0 (midnight) and 1 (next midnight)
         t = ((future_time.hour * 60 + future_time.minute) * 60 + future_time.second) / 86400  # 86400 seconds in a day
+        t = abs(1-t) #invert
 
         # Define sky colors for different times of day
         colors = [
             (141, 164, 195),  # morning
             (159, 166, 174),  # midday
-            (218, 113, 66),  # evening
-            (195, 55, 28),  # midnight
+            (255, 60, 78),  # evening
+            (0, 0, 57),  # midnight
         ]
 
         # Calculate the index and interpolation factor for the current time
