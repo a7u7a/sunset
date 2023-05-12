@@ -211,7 +211,7 @@ class Sunset(SampleBase):
         t = ((future_time.hour * 60 + future_time.minute) * 60 + future_time.second) / 86400  # 86400 seconds in a day
         print("time", future_time)
         print("t",t)
-        print(" ")
+        
         # t = abs(1-t) #invert
 
         # Define sky colors for different times of day
@@ -230,6 +230,7 @@ class Sunset(SampleBase):
         # Interpolate between the current and next colors
         color = [c1 * (1 - t) + c2 * t for c1, c2 in zip(colors[i % len(colors)], colors[(i + 1) % len(colors)])]
         print("color", color)
+        print(" ")
         # Fill the screen with the color
         self.fill_color(tuple(map(int, color)))
 
