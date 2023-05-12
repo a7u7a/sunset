@@ -176,6 +176,7 @@ class Sunset(SampleBase):
 
         # normalize it to a 0-1 scale (0 at midnight, 1 at next midnight)
         normalized_time = minutes_from_midnight / (24*60)
+        print("normalized time", normalized_time)
 
         # we use cos function to emulate the sun's movement, it returns 1 at midnight, 0 at 6AM, -1 at noon, 0 at 6PM and 1 at midnight again
         sun_elevation = math.sin(2*math.pi * normalized_time)
