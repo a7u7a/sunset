@@ -193,7 +193,10 @@ class Sunset(SampleBase):
         current_time = datetime.now()
         sun_radius = 30
         future_time = current_time + timedelta(hours=offset)
+        print("time", future_time)
         sun_y_pos = self.get_sun_position(future_time)
+        print("sun pos", sun_y_pos)
+        print("")
         x,y = self.to_rectangular(int(panel_width/2), sun_y_pos)
         self.draw_filled_circle(x,y,sun_radius,self.sun_color)
 
@@ -241,32 +244,32 @@ class Sunset(SampleBase):
         self.tickers = TickerData().tickers
 
         # to test sun position
-        # for t in range(24):
-        #     self.offset_canvas.Clear()
-        #     self.draw_sun(t)
-        #     self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-        #     sleep(1)
+        for t in range(24):
+            self.offset_canvas.Clear()
+            self.draw_sun(t)
+            self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+            sleep(1)
 
-        while True: 
-            if self.stock_data is not None:
-                futures = list(self.stock_data.keys())
-                self.offset_canvas.Clear()
-                upper = 40
-                lower = 60
-                # self.update_sky_gradient()
-                self.update_sky_color()
-                self.draw_sun(0)
-                for future in futures:
-                    future_data = self.stock_data[future]
-                    # c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
-                    color = self.get_color_from_tickers(future)
-                    self.plot_data(future_data, color, lower, upper)
-                    # modify limits after plotting
-                    h = int(panel_height/4)
-                    upper += random.randint(h-4,h+4)
-                    lower += random.randint(h-4,h+4)
-                self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
-                sleep(60)
+        # while True: 
+        #     if self.stock_data is not None:
+        #         futures = list(self.stock_data.keys())
+        #         self.offset_canvas.Clear()
+        #         upper = 40
+        #         lower = 60
+        #         # self.update_sky_gradient()
+        #         self.update_sky_color()
+        #         self.draw_sun(0)
+        #         for future in futures:
+        #             future_data = self.stock_data[future]
+        #             # c1 = (random.randint(0,255), random.randint(0,255), random.randint(0,255)) 
+        #             color = self.get_color_from_tickers(future)
+        #             self.plot_data(future_data, color, lower, upper)
+        #             # modify limits after plotting
+        #             h = int(panel_height/4)
+        #             upper += random.randint(h-4,h+4)
+        #             lower += random.randint(h-4,h+4)
+        #         self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
+        #         sleep(60)
                 
 
 if __name__ == "__main__":
