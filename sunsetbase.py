@@ -209,6 +209,7 @@ class Sunset(SampleBase):
 
         # Normalize the time to a value between 0 (midnight) and 1 (next midnight)
         t = ((future_time.hour * 60 + future_time.minute) * 60 + future_time.second) / 86400  # 86400 seconds in a day
+        print("t",t)
         # t = abs(1-t) #invert
 
         # Define sky colors for different times of day
