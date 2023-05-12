@@ -206,10 +206,11 @@ class Sunset(SampleBase):
         # Get the current time
         now = datetime.now()
         future_time = now + timedelta(hours=offset)
+        print("time", future_time)
+        future_time += future_time + timedelta(hours=6) # extra offset to fix bug
 
         # Normalize the time to a value between 0 (midnight) and 1 (next midnight)
         t = ((future_time.hour * 60 + future_time.minute) * 60 + future_time.second) / 86400  # 86400 seconds in a day
-        print("time", future_time)
         print("t",t)
         
         # t = abs(1-t) #invert
