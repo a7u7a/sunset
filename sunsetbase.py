@@ -181,7 +181,7 @@ class Sunset(SampleBase):
         sun_elevation = math.cos(2*math.pi * normalized_time)
 
         # normalize sun elevation to a panel_height/2-panel_height scale (panel_height/2 at lowest, 0 at highest)
-        screen_position = int((panel_height / 4) * (1-sun_elevation))
+        screen_position = int((panel_height / 2) * (1-sun_elevation))
 
         return screen_position
 
