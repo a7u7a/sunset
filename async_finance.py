@@ -94,4 +94,4 @@ class Finance(object):
                         print("Error while saving stock data to file:", e)  
             except Exception as e: 
                 print("ERROR async_finance.py, problem getting data from Yahoo Finance:", e)
-            time.sleep(3600) # check for new values every hour
+            time.sleep(86400) # check for new values every hour
