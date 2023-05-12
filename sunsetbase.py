@@ -196,6 +196,7 @@ class Sunset(SampleBase):
         print("sun pos", sun_y_pos)
         print("")
         x,y = self.to_rectangular(int(panel_width/2), sun_y_pos)
+        print("transformed", x,y)
         self.draw_filled_circle(x,y,sun_radius,self.sun_color)
 
 
