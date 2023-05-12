@@ -229,7 +229,7 @@ class Sunset(SampleBase):
 
         # Interpolate between the current and next colors
         color = [c1 * (1 - t) + c2 * t for c1, c2 in zip(colors[i % len(colors)], colors[(i + 1) % len(colors)])]
-
+        print("color", color)
         # Fill the screen with the color
         self.fill_color(tuple(map(int, color)))
 
