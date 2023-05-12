@@ -212,12 +212,13 @@ class Sunset(SampleBase):
                 x_,y_ = self.to_rectangular(x, y)
                 self.offset_canvas.SetPixel(x_, y_, r, g, b)
 
-    def update_sky_color(self):
+    def update_sky_color(self, offset):
         # Get the current time
         now = datetime.now()
+        future_time = now + timedelta(hours=offset)
 
         # Normalize the time to a value between 0 (midnight) and 1 (next midnight)
-        t = ((now.hour * 60 + now.minute) * 60 + now.second) / 86400  # 86400 seconds in a day
+        t = ((future_time.hour * 60 + future_time.minute) * 60 + future_time.second) / 86400  # 86400 seconds in a day
 
         # Define sky colors for different times of day
         colors = [
@@ -246,6 +247,7 @@ class Sunset(SampleBase):
         for t in range(24):
             self.offset_canvas.Clear()
             self.draw_sun(t)
+            self.update_sky_color(t)
             self.offset_canvas = self.matrix.SwapOnVSync(self.offset_canvas)
             sleep(1)
 
@@ -255,7 +257,6 @@ class Sunset(SampleBase):
         #         self.offset_canvas.Clear()
         #         upper = 40
         #         lower = 60
-        #         # self.update_sky_gradient()
         #         self.update_sky_color()
         #         self.draw_sun(0)
         #         for future in futures:
