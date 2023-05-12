@@ -179,7 +179,7 @@ class Sunset(SampleBase):
         
 
         # we use cos function to emulate the sun's movement, it returns 1 at midnight, 0 at 6AM, -1 at noon, 0 at 6PM and 1 at midnight again
-        sun_elevation = math.sin(2*math.pi * normalized_time)
+        sun_elevation = math.cos(2*math.pi * normalized_time)
         print("norm", normalized_time, "1-elev", 1-sun_elevation)
         # normalize sun elevation to a panel_height/2-panel_height scale (panel_height/2 at lowest, 0 at highest)
         screen_position = int((panel_height / 2) * (1-sun_elevation))
