@@ -220,7 +220,7 @@ class Sunset(SampleBase):
             (141, 164, 195),  # morning
             (159, 166, 174),  # midday
             (255, 60, 78),  # evening
-            (0, 0, 57),  # midnight
+            (0, 0, 0),  # midnight
         ]
 
         # Calculate the index and interpolation factor for the current time
