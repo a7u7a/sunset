@@ -133,7 +133,7 @@ class Sunset(SampleBase):
         dates = [datetime.strptime(date, "%Y-%m-%d") for date in dates]
 
         # Replace "nodata" with None and convert others to float
-        values = [None if value == "nodata" else float(value) for value in values]
+        values = [None if value == "nodata" or value == "null" else float(value) for value in values]
         
         # Step 2: Normalize data to fit LED panel
         max_value = max(v for v in values if v is not None)
