@@ -15,13 +15,13 @@ sys.path.append(parent)
 from samplebase import SampleBase
 
 
-panel_width = 128
-panel_height = 128
+panel_width = 96
+panel_height = 96
 
 class Sunset(SampleBase):
     def __init__(self, *args, **kwargs):
         super(Sunset, self).__init__(*args, **kwargs)
-        self.sun_color = (255, 246, 00)
+        self.sun_color = (253, 28, 8)
         self.stock_data = None
         self.load_stocks()
 
@@ -184,7 +184,7 @@ class Sunset(SampleBase):
     def draw_sun(self, offset):
         """Draw sun according to time"""
         current_time = datetime.now()
-        sun_radius = 30
+        sun_radius = 20
         future_time = current_time + timedelta(hours=offset)
         sun_y_pos = self.get_sun_position(future_time)
         x,y = self.to_rectangular(int(panel_width/2), sun_y_pos)
@@ -214,8 +214,8 @@ class Sunset(SampleBase):
         # Define sky colors for different times of day
         colors = [
             (141, 164, 195),  # morning
-            (159, 166, 174),  # midday
-            (255, 60, 78),  # evening
+            (47, 97, 135),  # midday
+            (0, 25, 51),  # evening
             (0, 0, 0),  # midnight
         ]
 

@@ -3,17 +3,17 @@
         {
             "symbol": "GC=F",
             "name": "Gold",
-            "color":[147,25,1]
+            "color":[154,193,176]
         },
         {
             "symbol": "CL=F",
             "name": "Crude Oil",
-            "color":[90,7,1]
+            "color":[228,226,179]
         },
         {
             "symbol": "HG=F",
             "name": "Copper",
-            "color":[35,15,9]
+            "color":[39,41,13]
         }
     ]
 }
