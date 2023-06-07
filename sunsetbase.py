@@ -1,4 +1,3 @@
-from samplebase import SampleBase
 import sys
 import random
 import os
@@ -14,6 +13,7 @@ import time
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
 sys.path.append(parent)
+from samplebase import SampleBase
 
 
 panel_width = 96
