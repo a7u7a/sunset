@@ -5,8 +5,9 @@ sudo python app.py --led-cols=128 --led-rows=32 --led-slowdown=2 --led-gpio-mapp
 ````
 
 # Autostart setup
-- Shh into the pi: $ ssh pi@raspberrypi.local
-- Create unit file: $ sudo nano /lib/systemd/system/sunset.service
+
+- Shh into the pi: `$ ssh pi@raspberrypi.local`
+- Create unit file: `$ sudo nano /lib/systemd/system/sunset.service`
 - Add this to the file:
 
 ````
