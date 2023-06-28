@@ -50,4 +50,5 @@ Mar 05 00:13:24 raspberrypi python3[955]: at the end of /boot/cmdline.txt and re
 ````
 
 # Stop daemon
-Run $ service sunset stop
+
+- Run: `$ service sunset stop`
