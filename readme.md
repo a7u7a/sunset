@@ -22,6 +22,6 @@ ExecStart=/usr/bin/python3 /home/pi/rpi-rgb-led-matrix/bindings/python/samples/s
 WantedBy=multi-user.target
 ````
 
-Reload daemons: `$ sudo systemctl daemon-reload`
-Enable service on boot: `$ sudo systemctl enable sunset.service`
-Reboot: `$ sudo reboot`
+- Reload daemons: `$ sudo systemctl daemon-reload`
+- Enable service on boot: `$ sudo systemctl enable sunset.service`
+- Reboot: `$ sudo reboot`
