@@ -21,7 +21,7 @@ panel_height = 128
 class Sunset(SampleBase):
     def __init__(self, *args, **kwargs):
         super(Sunset, self).__init__(*args, **kwargs)
-        self.sun_color = (177, 136, 58)
+        self.sun_color = (255, 246, 00)
         self.stock_data = None
 
     def load_stocks(self):
@@ -218,10 +218,10 @@ class Sunset(SampleBase):
 
         # Define sky colors for different times of day
         colors = [
-            (200, 200, 0),  # morning
-            (0, 200, 200),  # midday
-            (200, 100, 0),  # evening
-            (0, 0, 100),  # midnight
+            (141, 164, 195),  # morning
+            (159, 166, 174),  # midday
+            (218, 113, 66),  # evening
+            (195, 55, 28),  # midnight
         ]
 
         # Calculate the index and interpolation factor for the current time
