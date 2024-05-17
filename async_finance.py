@@ -1,14 +1,13 @@
 import time
 from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import StringIO
 import csv
 import json
-from urllib.request import urlopen
-import ssl
+import yfinance as yf
 from ticker_data import TickerData
-from datetime import datetime, timedelta
+
 
 def process_data(data):
     # Remove the first row (headers)
@@ -52,29 +51,35 @@ class Finance(object):
         # self.thread.join()
 
     def get_stocks_data(self, ticker):
-        # set time range for query for the last days
+        # Set time range for query for the last 8 days
         days = 8
-        end_time = int(time.time())
-        start_time = end_time - 60*60*24*days
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=days)
         symbol = ticker["symbol"]
+
         try:
-            url = f"https://query1.finance.yahoo.com/v7/finance/download/{symbol}?period1={start_time}&period2={end_time}&interval=1d&events=history&includeAdjustedClose=true".format(symbol=symbol)
             data = {}
-            ssl._create_default_https_context = ssl._create_unverified_context
-            with urlopen(url, timeout=10) as connection:
-                res = connection.read().decode()
-                _ = csv.reader(StringIO(res))
-                cleaned = process_data(list(_))
-                data[symbol] = cleaned
-                return data
+            ticker_yf = yf.Ticker(symbol)
+            hist = ticker_yf.history(start=start_date, end=end_date, interval="1d")
+
+            # Convert the history data to a list of lists as expected by process_data
+            hist_list = [["Date", "Open", "High", "Low", "Close", "Volume"]]
+            for date, row in hist.iterrows():
+                hist_list.append([date.strftime('%Y-%m-%d'), row["Open"], row["High"], row["Low"], row["Close"], row["Volume"]])
+
+            cleaned = process_data(hist_list)
+            data[symbol] = cleaned
+            return data
         except Exception as e:
-            print("Problem getting data from Yahoo Finance:",e)
-            # bad url, socket timeout, http forbidden, etc.
+            print("Problem getting data from Yahoo Finance:", e)
             return None
 
-    def save_file(self,dict_data):
-        with open('stock_data.json', 'w') as file:
-            json.dump(dict_data, file)    
+    def save_file(self, dict_data):
+        try:
+            with open('stock_data.json', 'w') as file:
+                json.dump(dict_data, file)
+        except Exception as e:
+            print("Error while saving stock data to file:", e)
 
     def run_yfinance(self):
         tickers = self.tickerData.tickers["tickers"]
@@ -94,4 +99,9 @@ class Finance(object):
                         print("Error while saving stock data to file:", e)  
             except Exception as e: 
                 print("ERROR async_finance.py, problem getting data from Yahoo Finance:", e)
-            time.sleep(86400) # check for new values every hour
+            time.sleep(86400)  # sleep for one day
+
+# Example usage
+if __name__ == "__main__":
+    finance = Finance()
+    finance.thread.join()  # This will keep the main thread running
